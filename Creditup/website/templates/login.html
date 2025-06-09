@@ -1,0 +1,264 @@
+{% extends "base.html" %} 
+{% block title %}Login{% endblock %} 
+{% block content %}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        width: 87%;
+        padding: 20px;
+    }
+
+    form {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        padding: 50px 40px;
+        max-width: 450px;
+        width: 100%;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+        animation: slideInUp 0.8s ease;
+    }
+
+    form::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+        border-radius: 20px 20px 0 0;
+    }
+
+    form::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+        pointer-events: none;
+        animation: rotate 20s linear infinite;
+    }
+
+    h3 {
+        color: #2c3e50;
+        margin-bottom: 40px;
+        font-size: 2.2em;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+        position: relative;
+        z-index: 1;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.95em;
+        transition: color 0.3s ease;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 16px 20px;
+        border: 2px solid #e1e8ed;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+        position: relative;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 1);
+    }
+
+    .form-control:hover {
+        border-color: #b8c6db;
+        transform: translateY(-1px);
+    }
+
+    .btn-primary {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 16px 32px;
+        border-radius: 50px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .btn-primary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-primary:hover::before {
+        left: 100%;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes rotate {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Input focus animations */
+    .form-group {
+        position: relative;
+    }
+
+    .form-group::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+
+    .form-control:focus + .form-group::after,
+    .form-group:focus-within::after {
+        width: 100%;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .form-container {
+            padding: 20px;
+        }
+        
+        form {
+            padding: 40px 30px;
+            border-radius: 15px;
+        }
+
+        h3 {
+            font-size: 1.8em;
+        }
+
+        .form-control {
+            padding: 14px 16px;
+        }
+    }
+
+    /* Floating label effect */
+    .form-group.floating {
+        position: relative;
+    }
+
+    .form-group.floating label {
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0 5px;
+    }
+
+    .form-group.floating .form-control:focus + label,
+    .form-group.floating .form-control:not(:placeholder-shown) + label {
+        top: 0;
+        font-size: 0.8em;
+        color: #667eea;
+        transform: translateY(-50%);
+    }
+</style>
+
+<div class="form-container">
+    <form method="POST" action="{{ url_for('auth.login') }}">
+        <h3>Login</h3>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" />
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
+
+{% endblock %}

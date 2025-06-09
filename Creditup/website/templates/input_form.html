@@ -1,0 +1,493 @@
+{% extends "base.html" %}
+{% block title %}Credit Scoring Form{% endblock %}
+
+{% block content %}
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .form-container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        max-width: 800px;
+        margin: 20px auto;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .form-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+        border-radius: 20px 20px 0 0;
+    }
+
+    h2 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2.2em;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+        color: #34495e;
+        margin: 30px 0 20px 0;
+        font-size: 1.4em;
+        font-weight: 600;
+        position: relative;
+        padding-left: 20px;
+    }
+
+    h3::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 20px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 2px;
+    }
+
+    label {
+        display: block;
+        margin-top: 20px;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.95em;
+        transition: color 0.3s ease;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 14px 16px;
+        margin-top: 5px;
+        border: 2px solid #e1e8ed;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+        position: relative;
+    }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        transform: translateY(-1px);
+    }
+
+    input:hover, select:hover {
+        border-color: #b8c6db;
+        transform: translateY(-1px);
+    }
+
+    input[type="submit"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        margin-top: 40px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 600;
+        padding: 16px 32px;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    input[type="submit"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    input[type="submit"]:active {
+        transform: translateY(0);
+    }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        margin-left: 12px;
+        vertical-align: middle;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        text-align: center;
+        line-height: 24px;
+        font-size: 14px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .tooltip:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 450px;
+        background: rgba(34, 34, 34, 0.95);
+        backdrop-filter: blur(10px);
+        color: #fff;
+        text-align: left;
+        border-radius: 12px;
+        padding: 16px;
+        position: absolute;
+        z-index: 9999;
+        bottom: 140%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .tooltip:hover .tooltiptext,
+    .tooltip:focus .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+        transform: translateX(-50%) translateY(-5px);
+    }
+
+    .tooltip .tooltiptext::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: rgba(34, 34, 34, 0.95) transparent transparent transparent;
+    }
+
+    .tooltip .tooltiptext table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        background: transparent;
+    }
+
+    .tooltip .tooltiptext th,
+    .tooltip .tooltiptext td {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 10px 12px;
+        text-align: left;
+    }
+
+    .tooltip .tooltiptext th {
+        background: rgba(255, 255, 255, 0.1);
+        font-weight: 600;
+    }
+
+    .tooltip .tooltiptext tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Tooltip mới cho dấu chấm than */
+    .exclamation-tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        margin-left: 8px;
+        vertical-align: middle;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f39c12, #e67e22);
+        color: white;
+        text-align: center;
+        line-height: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .exclamation-tooltip:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+    }
+
+    .exclamation-tooltip .exclamation-tooltiptext {
+        visibility: hidden;
+        width: 350px;
+        background: rgba(34, 34, 34, 0.95);
+        backdrop-filter: blur(10px);
+        color: #fff;
+        text-align: left;
+        border-radius: 12px;
+        padding: 16px;
+        position: absolute;
+        z-index: 9999;
+        bottom: 140%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .exclamation-tooltip:hover .exclamation-tooltiptext,
+    .exclamation-tooltip:focus .exclamation-tooltiptext {
+        visibility: visible;
+        opacity: 1;
+        transform: translateX(-50%) translateY(-5px);
+    }
+
+    .exclamation-tooltip .exclamation-tooltiptext::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: rgba(34, 34, 34, 0.95) transparent transparent transparent;
+    }
+
+    /* Form sections animation */
+    .form-container > * {
+        animation: fadeInUp 0.6s ease forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    .form-container > *:nth-child(1) { animation-delay: 0.1s; }
+    .form-container > *:nth-child(2) { animation-delay: 0.2s; }
+    .form-container > *:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .form-container {
+            margin: 10px;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+        }
+
+        .tooltip .tooltiptext {
+            width: 320px;
+        }
+
+        .exclamation-tooltip .exclamation-tooltiptext {
+            width: 280px;
+        }
+
+        input, select {
+            padding: 12px 14px;
+        }
+    }
+
+    /* Loading animation for submit button */
+    @keyframes pulse {
+        0% { box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
+        50% { box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5); }
+        100% { box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
+    }
+
+    input[type="submit"]:focus {
+        animation: pulse 2s infinite;
+    }
+</style>
+
+<div class="form-container">
+    <h2>Credit Scoring Input Form</h2>
+    <form action="{{ url_for('views.result') }}" method="post">
+        <h3>Academic Information</h3>
+        <label>GPA (scale 0–4):</label>
+        <input type="number" name="gpa" step="0.01" min="0" max="4" required>
+
+        <label>Major:</label>
+        <select name="major" required>
+            <option value="accounting">Accounting</option>
+            <option value="finance">Finance</option>
+            <option value="marketing">Marketing</option>
+            <option value="law">Law</option>
+            <option value="education">Education</option>
+            <option value="engineering">Engineering</option>
+            <option value="computer_science">Computer Science</option>
+            <option value="data_science">Data Science</option>
+            <option value="economics">Economics</option>
+            <option value="psychology">Psychology</option>
+            <option value="medicine">Medicine</option>
+            <option value="other">Other</option>
+        </select>
+
+        <h3>Financial Behavior</h3>
+        <label>Monthly Income (VND):</label>
+        <input type="number" name="income" min="0" required>
+
+        <label>Monthly Spending (VND):</label>
+        <input type="number" name="spending" min="0" required>
+
+        <label>Monthly Saving (VND):</label>
+        <input type="number" name="saving" min="0" required>
+
+        <label>Emergency Fund Source:</label>
+        <select name="reserve_fund" required>
+            <option value="personal_savings">Personal Savings</option>
+            <option value="family_support">Family Support</option>
+            <option value="insurance">Insurance</option>
+            <option value="none">None</option>
+        </select>
+
+        <label>Current Debt Type:</label>
+        <select name="debt" required>
+            <option value="student_loan">Student Loan</option>
+            <option value="family_loan">Family Loan</option>
+            <option value="credit_card">Credit Card</option>
+            <option value="none">None</option>
+        </select>
+
+        <label>Amount of Debt (if any):</label>
+        <input type="number" name="debt_amount" min="0">
+
+        <h3>Personal Behavior</h3>
+        <div
+            style="display: flex; align-items: center; gap: 8px; margin-top: 15px; margin-bottom: 5px; position: relative; z-index: 10000;">
+            <label style="margin: 0; font-weight: bold;">
+                In the past 3 months, how would you rate your level of self-discipline (1–5)?
+            </label>
+            <span class="exclamation-tooltip" tabindex="0">
+                !
+                <span class="exclamation-tooltiptext">
+                    <strong>1 Very Poor:</strong> No plans, procrastinates often, easily distracted.<br><br>
+                    <strong>2 Poor:</strong> Has intentions but lacks follow-through, gives up easily.<br><br>
+                    <strong>3 Average:</strong> Has a plan, follows it partially, inconsistent effort.<br><br>
+                    <strong>4 Good:</strong> Clear plans, generally follows them, fairly disciplined.<br><br>
+                    <strong>5 Excellent:</strong> Highly self-motivated, disciplined, maintains habits well.
+                </span>
+            </span>
+            <span class="tooltip" tabindex="0"
+                style="z-index: 10001;">
+                i
+                <span class="tooltiptext" style="z-index: 10002;">
+                    <table>
+                        <tr>
+                            <th>Score</th>
+                            <th>Rating</th>
+                            <th>Brief Description</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Very Poor</td>
+                            <td>No plans, procrastinates often, easily distracted.</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Poor</td>
+                            <td>Has intentions but lacks follow-through, gives up easily.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Average</td>
+                            <td>Has a plan, follows it partially, inconsistent effort.</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Good</td>
+                            <td>Clear plans, generally follows them, fairly disciplined.</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Excellent</td>
+                            <td>Highly self-motivated, disciplined, maintains habits well.</td>
+                        </tr>
+                    </table>
+                </span>
+            </span>
+        </div>
+        <input type="number" name="discipline" min="1" max="5" required>
+
+        <label>Do you have a personal study schedule?</label>
+        <select name="schedule" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label>Any disciplinary violations?</label>
+        <select name="violation" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <h3>Online Behavior</h3>
+        <label>Average smartphone use per day (hours):</label>
+        <input type="number" name="smartphone" step="0.1" min="0" required>
+
+        <label>Most used app type:</label>
+        <select name="app_type" required>
+            <option value="social_media">Social Media</option>
+            <option value="games">Games</option>
+            <option value="education">Education</option>
+            <option value="finance">Finance</option>
+            <option value="messaging">Messaging</option>
+            <option value="browsing">Browsing</option>
+        </select>
+
+        <label>Do you use financial apps?</label>
+        <select name="finance_app" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label>Name of Financial App (if used):</label>
+        <input type="text" name="finance_app_name">
+
+        <label>How many times do you read financial news per week?</label>
+        <input type="number" name="news_freq" min="0" required>
+
+        <label>Have you ever taken a finance course?</label>
+        <select name="finance_course" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <input type="submit" value="Submit">
+    </form>
+</div>
+{% endblock %}
